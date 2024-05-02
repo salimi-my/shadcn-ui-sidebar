@@ -61,14 +61,15 @@ export function Menu({ isOpen }: MenuProps) {
               </TooltipProvider>
             </li>
           ) : (
-            <CollapseMenuButton
-              key={index}
-              icon={Icon}
-              label={label}
-              active={active}
-              submenus={submenus}
-              isOpen={isOpen}
-            />
+            <li className="w-full" key={index}>
+              <CollapseMenuButton
+                icon={Icon}
+                label={label}
+                active={active}
+                submenus={submenus}
+                isOpen={isOpen}
+              />
+            </li>
           )
         )}
         <li className="w-full grow flex items-end">
