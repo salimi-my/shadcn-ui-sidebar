@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Dot, LucideIcon } from "lucide-react";
+import { ChevronDown, Dot, LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -57,7 +57,10 @@ export function CollapseMenuButton({
       onOpenChange={setIsCollapsed}
       className="w-full"
     >
-      <CollapsibleTrigger asChild>
+      <CollapsibleTrigger
+        className="[&[data-state=open]>div>div>svg]:rotate-180"
+        asChild
+      >
         <Button
           variant={active ? "secondary" : "ghost"}
           className="w-full justify-start h-10"
@@ -86,16 +89,15 @@ export function CollapseMenuButton({
                   : "-translate-x-96 opacity-0"
               )}
             >
-              {isCollapsed ? (
-                <ChevronUp size={18} />
-              ) : (
-                <ChevronDown size={18} />
-              )}
+              <ChevronDown
+                size={18}
+                className="transition-transform duration-200"
+              />
             </div>
           </div>
         </Button>
       </CollapsibleTrigger>
-      <CollapsibleContent>
+      <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
         {submenus.map(({ href, label, active }, index) => (
           <Button
             key={index}
@@ -137,30 +139,6 @@ export function CollapseMenuButton({
                     <span className={cn(isOpen === false ? "" : "mr-4")}>
                       <Icon size={18} />
                     </span>
-                    <p
-                      className={cn(
-                        "whitespace-nowrap",
-                        isOpen === false
-                          ? "-translate-x-96 opacity-0 hidden"
-                          : "translate-x-0 opacity-100"
-                      )}
-                    >
-                      {label}
-                    </p>
-                  </div>
-                  <div
-                    className={cn(
-                      "whitespace-nowrap",
-                      isOpen
-                        ? "translate-x-0 opacity-100"
-                        : "-translate-x-96 opacity-0"
-                    )}
-                  >
-                    {isCollapsed ? (
-                      <ChevronUp size={18} />
-                    ) : (
-                      <ChevronDown size={18} />
-                    )}
                   </div>
                 </div>
               </Button>
