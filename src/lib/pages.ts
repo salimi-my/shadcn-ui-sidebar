@@ -5,7 +5,7 @@ export function getPages(pathname: string) {
     {
       href: "/dashboard",
       label: "Dashboard",
-      active: pathname === "/dashboard",
+      active: pathname.includes("/dashboard"),
       icon: LayoutGrid,
       submenus: []
     },
@@ -28,7 +28,7 @@ export function getPages(pathname: string) {
       ]
     },
     {
-      href: "/users?page=1&sort=createdAt.desc",
+      href: "/users",
       label: "Users",
       active: pathname.includes("/users"),
       icon: Users,
@@ -37,7 +37,7 @@ export function getPages(pathname: string) {
     {
       href: "/account",
       label: "Account",
-      active: pathname === "/account",
+      active: pathname.includes("/account"),
       icon: UserCog,
       submenus: []
     }
