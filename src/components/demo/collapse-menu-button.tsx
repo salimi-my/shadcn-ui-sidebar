@@ -10,13 +10,13 @@ import { DropdownMenuArrow } from "@radix-ui/react-dropdown-menu";
 import {
   Collapsible,
   CollapsibleContent,
-  CollapsibleTrigger
+  CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-  TooltipProvider
+  TooltipProvider,
 } from "@/components/ui/tooltip";
 import {
   DropdownMenu,
@@ -24,7 +24,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuSeparator
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
 type Submenu = {
@@ -46,7 +46,7 @@ export function CollapseMenuButton({
   label,
   active,
   submenus,
-  isOpen
+  isOpen,
 }: CollapseMenuButtonProps) {
   const isSubmenuActive = submenus.some((submenu) => submenu.active);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(isSubmenuActive);
@@ -58,7 +58,7 @@ export function CollapseMenuButton({
       className="w-full"
     >
       <CollapsibleTrigger
-        className="[&[data-state=open]>div>div>svg]:rotate-180"
+        className="[&[data-state=open]>div>div>svg]:rotate-180 mb-1"
         asChild
       >
         <Button
@@ -102,7 +102,7 @@ export function CollapseMenuButton({
           <Button
             key={index}
             variant={active ? "secondary" : "ghost"}
-            className="w-full justify-start h-10"
+            className="w-full justify-start h-10 mb-1"
             asChild
           >
             <Link href={href}>
@@ -132,7 +132,7 @@ export function CollapseMenuButton({
             <DropdownMenuTrigger asChild>
               <Button
                 variant={active ? "secondary" : "ghost"}
-                className="w-full justify-start h-10"
+                className="w-full justify-start h-10 mb-1"
               >
                 <div className="w-full items-center flex justify-between">
                   <div className="flex items-center">
