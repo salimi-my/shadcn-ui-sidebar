@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# [shadcn/ui sidebar](https://shadcn-ui-sidebar.salimi.my) &middot; [![Author Salimi](https://img.shields.io/badge/Author-Salimi-%3C%3E)](https://www.linkedin.com/in/mohamad-salimi/)
 
-## Getting Started
+A stunning and functional retractable sidebar for Next.js built on top of [shadcn/ui](https://ui.shadcn.com) complete with desktop and mobile responsiveness.
 
-First, run the development server:
+## Features
+
+- Retractable mini and wide sidebar
+- Scrollable sidebar menu
+- Sheet menu for mobile
+- Grouped menu with labels
+- Collapsible submenu
+- Extracted menu items list
+
+## Tech/framework used
+
+- Next.js 14
+- Shadcn/ui
+- Tailwind CSS
+- TypeScript
+- Zustand
+- Vercel
+
+## Starting the project
+
+Run the following command:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Demo
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The app is hosted on Vercel. [Click here](https://shadcn-ui-sidebar.salimi.my) to visit.
+<br>
+Direct demo link: `https://shadcn-ui-sidebar.salimi.my`
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Screenshots
 
-## Learn More
+#### Light mode
 
-To learn more about Next.js, take a look at the following resources:
+![Light mode](/screenshots/screenshot-1.png)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### Dark mode
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+![Dark mode](/screenshots/screenshot-2.png)
 
-## Deploy on Vercel
+#### Mini sidebar
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+![Mini sidebar](/screenshots/screenshot-3.png)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+#### Sheet menu
+
+![Sheet menu](/screenshots/screenshot-4.png)
