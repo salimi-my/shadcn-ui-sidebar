@@ -1,7 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 import { PanelsTopLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { ArrowRightIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
+
+import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
 
 export default function HomePage() {
@@ -60,7 +62,36 @@ export default function HomePage() {
               </Button>
             </div>
           </section>
-          <div className="bg-neutral-100 dark:bg-neutral-800 mx-auto aspect-video overflow-hidden rounded-xl object-cover w-full lg:order-last lg:aspect-video" />
+          <div className="w-full flex justify-center relative">
+            <Image
+              src="/demo-light.png"
+              width={1080}
+              height={608}
+              alt="demo"
+              className="border rounded-xl shadow-sm dark:hidden"
+            />
+            <Image
+              src="/demo-dark.png"
+              width={1080}
+              height={608}
+              alt="demo-dark"
+              className="border border-zinc-600 rounded-xl shadow-sm hidden dark:block dark:shadow-gray-500/5"
+            />
+            <Image
+              src="/demo-mobile-light.png"
+              width={228}
+              height={494}
+              alt="demo-mobile"
+              className="border rounded-xl absolute bottom-0 right-0 hidden lg:block dark:hidden"
+            />
+            <Image
+              src="/demo-mobile-dark.png"
+              width={228}
+              height={494}
+              alt="demo-mobile"
+              className="border border-zinc-600 rounded-xl absolute bottom-0 right-0 hidden dark:lg:block"
+            />
+          </div>
         </div>
       </main>
       <footer className="py-6 md:py-0 border-t">
