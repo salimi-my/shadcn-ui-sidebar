@@ -106,7 +106,7 @@ export function CollapseMenuButton({
             asChild
           >
             <Link href={href}>
-              <span className="mr-4">
+              <span className="mr-4 ml-2">
                 <Dot size={18} />
               </span>
               <p
@@ -139,6 +139,14 @@ export function CollapseMenuButton({
                     <span className={cn(isOpen === false ? "" : "mr-4")}>
                       <Icon size={18} />
                     </span>
+                    <p
+                      className={cn(
+                        "whitespace-nowrap",
+                        isOpen === false ? "opacity-0" : "opacity-100"
+                      )}
+                    >
+                      {label}
+                    </p>
                   </div>
                 </div>
               </Button>
