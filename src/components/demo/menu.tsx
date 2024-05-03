@@ -13,7 +13,7 @@ import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-  TooltipProvider
+  TooltipProvider,
 } from "@/components/ui/tooltip";
 
 interface MenuProps {
@@ -59,7 +59,7 @@ export function Menu({ isOpen }: MenuProps) {
                           <TooltipTrigger asChild>
                             <Button
                               variant={active ? "secondary" : "ghost"}
-                              className="w-full justify-start h-10"
+                              className="w-full justify-start h-10 mb-1"
                               asChild
                             >
                               <Link href={href}>
