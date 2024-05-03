@@ -68,6 +68,7 @@ export default function HomePage() {
               width={1080}
               height={608}
               alt="demo"
+              priority
               className="border rounded-xl shadow-sm dark:hidden"
             />
             <Image
@@ -75,6 +76,7 @@ export default function HomePage() {
               width={1080}
               height={608}
               alt="demo-dark"
+              priority
               className="border border-zinc-600 rounded-xl shadow-sm hidden dark:block dark:shadow-gray-500/5"
             />
             <Image
