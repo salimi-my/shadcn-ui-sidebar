@@ -51,4 +51,4 @@ Direct demo link: `https://shadcn-ui-sidebar.salimi.my`
 
 #### Sheet menu
 
-<img src="/screenshots/screenshot-4.png" width="400">
+<img src="/screenshots/screenshot-4.png" width="300">
