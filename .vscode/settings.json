@@ -1,3 +1,4 @@
 {
-  "prettier.singleQuote": false
+  "prettier.singleQuote": false,
+  "prettier.trailingComma": "none"
 }

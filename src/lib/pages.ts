@@ -3,8 +3,8 @@ import {
   Users,
   Settings,
   Bookmark,
-  LayoutGrid,
-  SquareCheck
+  SquarePen,
+  LayoutGrid
 } from "lucide-react";
 
 type Submenu = {
@@ -47,7 +47,7 @@ export function getPages(pathname: string): Group[] {
           href: "",
           label: "Posts",
           active: pathname.includes("/posts"),
-          icon: SquareCheck,
+          icon: SquarePen,
           submenus: [
             {
               href: "/posts",
