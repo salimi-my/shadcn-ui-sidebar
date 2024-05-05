@@ -3,10 +3,10 @@ import { PanelsTopLeft } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useStore } from "@/hooks/use-store";
-import { Menu } from "@/components/demo/menu";
 import { Button } from "@/components/ui/button";
+import { Menu } from "@/components/admin-panel/menu";
 import { useSidebarToggle } from "@/hooks/use-sidebar-toggle";
-import { SidebarToggle } from "@/components/demo/sidebar-toggle";
+import { SidebarToggle } from "@/components/admin-panel/sidebar-toggle";
 
 export function Sidebar() {
   const sidebar = useStore(useSidebarToggle, (state) => state);

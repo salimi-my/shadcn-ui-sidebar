@@ -2,13 +2,13 @@
 
 import { cn } from "@/lib/utils";
 import { useStore } from "@/hooks/use-store";
-import { Footer } from "@/components/demo/footer";
-import { Navbar } from "@/components/demo/navbar";
-import { Sidebar } from "@/components/demo/sidebar";
+import { Footer } from "@/components/admin-panel/footer";
+import { Navbar } from "@/components/admin-panel/navbar";
+import { Sidebar } from "@/components/admin-panel/sidebar";
 import { useSidebarToggle } from "@/hooks/use-sidebar-toggle";
 
 export default function DemoLayout({
-  children
+  children,
 }: {
   children: React.ReactNode;
 }) {

@@ -1,7 +1,7 @@
-import { UserNav } from "@/components/demo/user-nav";
 import { ModeToggle } from "@/components/mode-toggle";
-import { PageTitle } from "@/components/demo/page-title";
-import { SheetMenu } from "@/components/demo/sheet-menu";
+import { UserNav } from "@/components/admin-panel/user-nav";
+import { PageTitle } from "@/components/admin-panel/page-title";
+import { SheetMenu } from "@/components/admin-panel/sheet-menu";
 
 export function Navbar() {
   return (
