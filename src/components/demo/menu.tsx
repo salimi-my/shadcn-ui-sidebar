@@ -42,7 +42,7 @@ export function Menu({ isOpen }: MenuProps) {
                         <Ellipsis className="h-5 w-5" />
                       </div>
                     </TooltipTrigger>
-                    <TooltipContent>
+                    <TooltipContent side="right">
                       <p>{groupLabel}</p>
                     </TooltipContent>
                   </Tooltip>
