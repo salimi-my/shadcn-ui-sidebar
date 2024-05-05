@@ -10,13 +10,13 @@ import { DropdownMenuArrow } from "@radix-ui/react-dropdown-menu";
 import {
   Collapsible,
   CollapsibleContent,
-  CollapsibleTrigger,
+  CollapsibleTrigger
 } from "@/components/ui/collapsible";
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-  TooltipProvider,
+  TooltipProvider
 } from "@/components/ui/tooltip";
 import {
   DropdownMenu,
@@ -24,7 +24,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuSeparator,
+  DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
 
 type Submenu = {
@@ -46,7 +46,7 @@ export function CollapseMenuButton({
   label,
   active,
   submenus,
-  isOpen,
+  isOpen
 }: CollapseMenuButtonProps) {
   const isSubmenuActive = submenus.some((submenu) => submenu.active);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(isSubmenuActive);
@@ -72,7 +72,7 @@ export function CollapseMenuButton({
               </span>
               <p
                 className={cn(
-                  "whitespace-nowrap",
+                  "max-w-[150px] truncate",
                   isOpen
                     ? "translate-x-0 opacity-100"
                     : "-translate-x-96 opacity-0"
@@ -111,7 +111,7 @@ export function CollapseMenuButton({
               </span>
               <p
                 className={cn(
-                  "whitespace-nowrap",
+                  "max-w-[170px] truncate",
                   isOpen
                     ? "translate-x-0 opacity-100"
                     : "-translate-x-96 opacity-0"
@@ -141,7 +141,7 @@ export function CollapseMenuButton({
                     </span>
                     <p
                       className={cn(
-                        "whitespace-nowrap",
+                        "max-w-[200px] truncate",
                         isOpen === false ? "opacity-0" : "opacity-100"
                       )}
                     >
@@ -158,12 +158,14 @@ export function CollapseMenuButton({
         </Tooltip>
       </TooltipProvider>
       <DropdownMenuContent side="right" sideOffset={25} align="start">
-        <DropdownMenuLabel>{label}</DropdownMenuLabel>
+        <DropdownMenuLabel className="max-w-[190px] truncate">
+          {label}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {submenus.map(({ href, label, active }, index) => (
+        {submenus.map(({ href, label }, index) => (
           <DropdownMenuItem key={index} asChild>
             <Link className="cursor-pointer" href={href}>
-              {label}
+              <p className="max-w-[180px] truncate">{label}</p>
             </Link>
           </DropdownMenuItem>
         ))}
