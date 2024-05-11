@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import PlaceholderContent from "@/components/demo/placeholder-content";
+import { ContentLayout } from "@/components/admin-panel/content-layout";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,7 +13,7 @@ import {
 
 export default function AccountPage() {
   return (
-    <>
+    <ContentLayout title="Account">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -33,6 +34,6 @@ export default function AccountPage() {
         </BreadcrumbList>
       </Breadcrumb>
       <PlaceholderContent />
-    </>
+    </ContentLayout>
   );
 }
