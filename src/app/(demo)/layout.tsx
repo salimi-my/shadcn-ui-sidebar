@@ -13,6 +13,8 @@ export default function DemoLayout({
 }) {
   const sidebar = useStore(useSidebarToggle, (state) => state);
 
+  if(!sidebar) return null;
+
   return (
     <>
       <Sidebar />
