@@ -18,8 +18,8 @@ type Menu = {
   href: string;
   label: string;
   active: boolean;
-  icon: LucideIcon
-  submenus: Submenu[];
+  icon: LucideIcon;
+  submenus?: Submenu[];
 };
 
 type Group = {
@@ -66,15 +66,13 @@ export function getMenuList(pathname: string): Group[] {
           href: "/categories",
           label: "Categories",
           active: pathname.includes("/categories"),
-          icon: Bookmark,
-          submenus: []
+          icon: Bookmark
         },
         {
           href: "/tags",
           label: "Tags",
           active: pathname.includes("/tags"),
-          icon: Tag,
-          submenus: []
+          icon: Tag
         }
       ]
     },
@@ -85,15 +83,13 @@ export function getMenuList(pathname: string): Group[] {
           href: "/users",
           label: "Users",
           active: pathname.includes("/users"),
-          icon: Users,
-          submenus: []
+          icon: Users
         },
         {
           href: "/account",
           label: "Account",
           active: pathname.includes("/account"),
-          icon: Settings,
-          submenus: []
+          icon: Settings
         }
       ]
     }
