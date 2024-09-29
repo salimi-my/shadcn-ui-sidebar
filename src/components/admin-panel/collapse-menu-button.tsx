@@ -170,9 +170,15 @@ export function CollapseMenuButton({
           {label}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {submenus.map(({ href, label }, index) => (
+        {submenus.map(({ href, label, active }, index) => (
           <DropdownMenuItem key={index} asChild>
-            <Link className="cursor-pointer" href={href}>
+            <Link
+              className={`cursor-pointer ${
+                ((active === undefined && pathname === href) || active) &&
+                "bg-secondary"
+              }`}
+              href={href}
+            >
               <p className="max-w-[180px] truncate">{label}</p>
             </Link>
           </DropdownMenuItem>
