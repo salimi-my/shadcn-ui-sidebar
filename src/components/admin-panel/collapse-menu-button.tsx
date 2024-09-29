@@ -26,11 +26,12 @@ import {
   DropdownMenuContent,
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
+import { usePathname } from "next/navigation";
 
 type Submenu = {
   href: string;
   label: string;
-  active: boolean;
+  active?: boolean;
 };
 
 interface CollapseMenuButtonProps {
@@ -48,7 +49,10 @@ export function CollapseMenuButton({
   submenus,
   isOpen
 }: CollapseMenuButtonProps) {
-  const isSubmenuActive = submenus.some((submenu) => submenu.active);
+  const pathname = usePathname();
+  const isSubmenuActive = submenus.some((submenu) =>
+    submenu.active == undefined ? submenu.href === pathname : submenu.active
+  );
   const [isCollapsed, setIsCollapsed] = useState<boolean>(isSubmenuActive);
 
   return isOpen ? (
@@ -101,7 +105,11 @@ export function CollapseMenuButton({
         {submenus.map(({ href, label, active }, index) => (
           <Button
             key={index}
-            variant={active ? "secondary" : "ghost"}
+            variant={
+              (active === undefined && pathname === href) || active
+                ? "secondary"
+                : "ghost"
+            }
             className="w-full justify-start h-10 mb-1"
             asChild
           >

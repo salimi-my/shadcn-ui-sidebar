@@ -11,14 +11,14 @@ import {
 type Submenu = {
   href: string;
   label: string;
-  active: boolean;
+  active?: boolean;
 };
 
 type Menu = {
   href: string;
   label: string;
   active: boolean;
-  icon: LucideIcon
+  icon: LucideIcon;
   submenus: Submenu[];
 };
 
@@ -52,13 +52,11 @@ export function getMenuList(pathname: string): Group[] {
           submenus: [
             {
               href: "/posts",
-              label: "All Posts",
-              active: pathname === "/posts"
+              label: "All Posts"
             },
             {
               href: "/posts/new",
-              label: "New Post",
-              active: pathname === "/posts/new"
+              label: "New Post"
             }
           ]
         },
