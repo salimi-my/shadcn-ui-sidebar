@@ -1,0 +1,159 @@
+{
+  "name": "shadcn-sidebar",
+  "type": "registry:block",
+  "registryDependencies": [
+    "avatar",
+    "button",
+    "card",
+    "collapsible",
+    "dropdown-menu",
+    "scroll-area",
+    "sheet",
+    "tooltip"
+  ],
+  "dependencies": [
+    "immer",
+    "zustand",
+    "next-themes"
+  ],
+  "tailwind": {
+    "config": {
+      "theme": {
+        "extend": {
+          "keyframes": {
+            "accordion-down": {
+              "from": {
+                "height": "0"
+              },
+              "to": {
+                "height": "var(--radix-accordion-content-height)"
+              }
+            },
+            "accordion-up": {
+              "from": {
+                "height": "var(--radix-accordion-content-height)"
+              },
+              "to": {
+                "height": "0"
+              }
+            },
+            "collapsible-down": {
+              "from": {
+                "height": "0"
+              },
+              "to": {
+                "height": "var(--radix-collapsible-content-height)"
+              }
+            },
+            "collapsible-up": {
+              "from": {
+                "height": "var(--radix-collapsible-content-height)"
+              },
+              "to": {
+                "height": "0"
+              }
+            }
+          },
+          "animation": {
+            "accordion-down": "accordion-down 0.2s ease-out",
+            "accordion-up": "accordion-up 0.2s ease-out",
+            "collapsible-down": "collapsible-down 0.2s ease-out",
+            "collapsible-up": "collapsible-up 0.2s ease-out"
+          }
+        }
+      }
+    }
+  },
+  "files": [
+    {
+      "type": "registry:hook",
+      "content": "import { create } from \"zustand\";\nimport { persist, createJSONStorage } from \"zustand/middleware\";\nimport { produce } from \"immer\";\n\ntype SidebarSettings = { isHoverOpen: boolean };\ntype SidebarStore = {\n  isOpen: boolean;\n  isHover: boolean;\n  settings: SidebarSettings;\n  toggleOpen: () => void;\n  setIsHover: (isHover: boolean) => void;\n  setIsOpen: (isOpen: boolean) => void;\n  getIsOpenState: () => boolean;\n  setSettings: (settings: Partial<SidebarSettings>) => void;\n};\n\nexport const useSidebar = create(\n  persist<SidebarStore>(\n    (set, get) => ({\n      isOpen: true,\n      isHover: false,\n      settings: { isHoverOpen: true, test: false },\n      toggleOpen: () => {\n        set({ isOpen: !get().isOpen });\n      },\n      setIsOpen: (isOpen: boolean) => {\n        set({ isOpen });\n      },\n      setIsHover: (isHover: boolean) => {\n        set({ isHover });\n      },\n      getIsOpenState: () => {\n        const state = get();\n        return state.isOpen || (state.settings.isHoverOpen && state.isHover);\n      },\n      setSettings: (settings: Partial<SidebarSettings>) => {\n        set(\n          produce((state: SidebarStore) => {\n            state.settings = { ...state.settings, ...settings };\n          })\n        );\n      }\n    }),\n    {\n      name: \"sidebar\",\n      storage: createJSONStorage(() => localStorage)\n    }\n  )\n);\n",
+      "path": "hooks\\use-sidebar.ts",
+      "target": "hooks\\use-sidebar.ts"
+    },
+    {
+      "type": "registry:hook",
+      "content": "import { useState, useEffect } from \"react\";\n// Why not use zustand hook ?\n// This hook will error while use more than in one in a component\nexport const useStore = <T, F>(\n  store: (callback: (state: T) => unknown) => unknown,\n  callback: (state: T) => F\n) => {\n  const result = store(callback) as F;\n  const [data, setData] = useState<F>();\n\n  useEffect(() => {\n    setData(result);\n  }, [result]);\n\n  return data;\n};\n",
+      "path": "hooks\\use-store.ts",
+      "target": "hooks\\use-store.ts"
+    },
+    {
+      "type": "registry:component",
+      "content": "\"use client\";\n\nimport { cn } from \"@/lib/utils\";\nimport { Footer } from \"@/components/admin-panel/footer\";\nimport { Sidebar } from \"@/components/admin-panel/sidebar\";\nimport { useSidebar } from \"@/hooks/use-sidebar\";\nimport { useStore } from \"zustand\";\n\nexport default function AdminPanelLayout({\n  children\n}: {\n  children: React.ReactNode;\n}) {\n  const isSidebarOpen = useStore(useSidebar, (state) => state.getIsOpenState());\n  if (isSidebarOpen === undefined) return null;\n\n  return (\n    <>\n      <Sidebar />\n      <main\n        className={cn(\n          \"min-h-[calc(100vh_-_56px)] bg-zinc-50 dark:bg-zinc-900 transition-[margin-left] ease-in-out duration-300\",\n          isSidebarOpen === false ? \"lg:ml-[90px]\" : \"lg:ml-72\"\n        )}\n      >\n        {children}\n      </main>\n      <footer\n        className={cn(\n          \"transition-[margin-left] ease-in-out duration-300\",\n          isSidebarOpen === false ? \"lg:ml-[90px]\" : \"lg:ml-72\"\n        )}\n      >\n        <Footer />\n      </footer>\n    </>\n  );\n}\n",
+      "path": "components\\admin-panel\\admin-panel-layout.tsx",
+      "target": "components\\admin-panel\\admin-panel-layout.tsx"
+    },
+    {
+      "type": "registry:component",
+      "content": "\"use client\";\n\nimport Link from \"next/link\";\nimport { useState } from \"react\";\nimport { ChevronDown, Dot, LucideIcon } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\nimport { Button } from \"@/components/ui/button\";\nimport { DropdownMenuArrow } from \"@radix-ui/react-dropdown-menu\";\nimport {\n  Collapsible,\n  CollapsibleContent,\n  CollapsibleTrigger\n} from \"@/components/ui/collapsible\";\nimport {\n  Tooltip,\n  TooltipTrigger,\n  TooltipContent,\n  TooltipProvider\n} from \"@/components/ui/tooltip\";\nimport {\n  DropdownMenu,\n  DropdownMenuItem,\n  DropdownMenuLabel,\n  DropdownMenuTrigger,\n  DropdownMenuContent,\n  DropdownMenuSeparator\n} from \"@/components/ui/dropdown-menu\";\nimport { usePathname } from \"next/navigation\";\n\ntype Submenu = {\n  href: string;\n  label: string;\n  active?: boolean;\n};\n\ninterface CollapseMenuButtonProps {\n  icon: LucideIcon;\n  label: string;\n  active: boolean;\n  submenus: Submenu[];\n  isOpen: boolean | undefined;\n}\n\nexport function CollapseMenuButton({\n  icon: Icon,\n  label,\n  active,\n  submenus,\n  isOpen\n}: CollapseMenuButtonProps) {\n  const pathname = usePathname();\n  const isSubmenuActive = submenus.some((submenu) =>\n    submenu.active == undefined ? submenu.href === pathname : submenu.active\n  );\n  const [isCollapsed, setIsCollapsed] = useState<boolean>(isSubmenuActive);\n\n  return isOpen ? (\n    <Collapsible\n      open={isCollapsed}\n      onOpenChange={setIsCollapsed}\n      className=\"w-full\"\n    >\n      <CollapsibleTrigger\n        className=\"[&[data-state=open]>div>div>svg]:rotate-180 mb-1\"\n        asChild\n      >\n        <Button\n          variant={active ? \"secondary\" : \"ghost\"}\n          className=\"w-full justify-start h-10\"\n        >\n          <div className=\"w-full items-center flex justify-between\">\n            <div className=\"flex items-center\">\n              <span className=\"mr-4\">\n                <Icon size={18} />\n              </span>\n              <p\n                className={cn(\n                  \"max-w-[150px] truncate\",\n                  isOpen\n                    ? \"translate-x-0 opacity-100\"\n                    : \"-translate-x-96 opacity-0\"\n                )}\n              >\n                {label}\n              </p>\n            </div>\n            <div\n              className={cn(\n                \"whitespace-nowrap\",\n                isOpen\n                  ? \"translate-x-0 opacity-100\"\n                  : \"-translate-x-96 opacity-0\"\n              )}\n            >\n              <ChevronDown\n                size={18}\n                className=\"transition-transform duration-200\"\n              />\n            </div>\n          </div>\n        </Button>\n      </CollapsibleTrigger>\n      <CollapsibleContent className=\"overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down\">\n        {submenus.map(({ href, label, active }, index) => (\n          <Button\n            key={index}\n            variant={\n              (active === undefined && pathname === href) || active\n                ? \"secondary\"\n                : \"ghost\"\n            }\n            className=\"w-full justify-start h-10 mb-1\"\n            asChild\n          >\n            <Link href={href}>\n              <span className=\"mr-4 ml-2\">\n                <Dot size={18} />\n              </span>\n              <p\n                className={cn(\n                  \"max-w-[170px] truncate\",\n                  isOpen\n                    ? \"translate-x-0 opacity-100\"\n                    : \"-translate-x-96 opacity-0\"\n                )}\n              >\n                {label}\n              </p>\n            </Link>\n          </Button>\n        ))}\n      </CollapsibleContent>\n    </Collapsible>\n  ) : (\n    <DropdownMenu>\n      <TooltipProvider disableHoverableContent>\n        <Tooltip delayDuration={100}>\n          <TooltipTrigger asChild>\n            <DropdownMenuTrigger asChild>\n              <Button\n                variant={active ? \"secondary\" : \"ghost\"}\n                className=\"w-full justify-start h-10 mb-1\"\n              >\n                <div className=\"w-full items-center flex justify-between\">\n                  <div className=\"flex items-center\">\n                    <span className={cn(isOpen === false ? \"\" : \"mr-4\")}>\n                      <Icon size={18} />\n                    </span>\n                    <p\n                      className={cn(\n                        \"max-w-[200px] truncate\",\n                        isOpen === false ? \"opacity-0\" : \"opacity-100\"\n                      )}\n                    >\n                      {label}\n                    </p>\n                  </div>\n                </div>\n              </Button>\n            </DropdownMenuTrigger>\n          </TooltipTrigger>\n          <TooltipContent side=\"right\" align=\"start\" alignOffset={2}>\n            {label}\n          </TooltipContent>\n        </Tooltip>\n      </TooltipProvider>\n      <DropdownMenuContent side=\"right\" sideOffset={25} align=\"start\">\n        <DropdownMenuLabel className=\"max-w-[190px] truncate\">\n          {label}\n        </DropdownMenuLabel>\n        <DropdownMenuSeparator />\n        {submenus.map(({ href, label, active }, index) => (\n          <DropdownMenuItem key={index} asChild>\n            <Link\n              className={`cursor-pointer ${\n                ((active === undefined && pathname === href) || active) &&\n                \"bg-secondary\"\n              }`}\n              href={href}\n            >\n              <p className=\"max-w-[180px] truncate\">{label}</p>\n            </Link>\n          </DropdownMenuItem>\n        ))}\n        <DropdownMenuArrow className=\"fill-border\" />\n      </DropdownMenuContent>\n    </DropdownMenu>\n  );\n}\n",
+      "path": "components\\admin-panel\\collapse-menu-button.tsx",
+      "target": "components\\admin-panel\\collapse-menu-button.tsx"
+    },
+    {
+      "type": "registry:component",
+      "content": "import { Navbar } from \"@/components/admin-panel/navbar\";\n\ninterface ContentLayoutProps {\n  title: string;\n  children: React.ReactNode;\n}\n\nexport function ContentLayout({ title, children }: ContentLayoutProps) {\n  return (\n    <div>\n      <Navbar title={title} />\n      <div className=\"container pt-8 pb-8 px-4 sm:px-8\">{children}</div>\n    </div>\n  );\n}\n",
+      "path": "components\\admin-panel\\content-layout.tsx",
+      "target": "components\\admin-panel\\content-layout.tsx"
+    },
+    {
+      "type": "registry:component",
+      "content": "import Link from \"next/link\";\n\nexport function Footer() {\n  return (\n    <div className=\"z-20 w-full bg-background/95 shadow backdrop-blur supports-[backdrop-filter]:bg-background/60\">\n      <div className=\"mx-4 md:mx-8 flex h-14 items-center\">\n        <p className=\"text-xs md:text-sm leading-loose text-muted-foreground text-left\">\n          Built on top of{\" \"}\n          <Link\n            href=\"https://ui.shadcn.com\"\n            target=\"_blank\"\n            rel=\"noopener noreferrer\"\n            className=\"font-medium underline underline-offset-4\"\n          >\n            shadcn/ui\n          </Link>\n          . The source code is available on{\" \"}\n          <Link\n            href=\"https://github.com/salimi-my/shadcn-ui-sidebar\"\n            target=\"_blank\"\n            rel=\"noopener noreferrer\"\n            className=\"font-medium underline underline-offset-4\"\n          >\n            GitHub\n          </Link>\n          .\n        </p>\n      </div>\n    </div>\n  );\n}\n",
+      "path": "components\\admin-panel\\footer.tsx",
+      "target": "components\\admin-panel\\footer.tsx"
+    },
+    {
+      "type": "registry:component",
+      "content": "\"use client\";\n\nimport Link from \"next/link\";\nimport { Ellipsis, LogOut } from \"lucide-react\";\nimport { usePathname } from \"next/navigation\";\n\nimport { cn } from \"@/lib/utils\";\nimport { getMenuList } from \"@/lib/menu-list\";\nimport { Button } from \"@/components/ui/button\";\nimport { ScrollArea } from \"@/components/ui/scroll-area\";\nimport { CollapseMenuButton } from \"@/components/admin-panel/collapse-menu-button\";\nimport {\n  Tooltip,\n  TooltipTrigger,\n  TooltipContent,\n  TooltipProvider\n} from \"@/components/ui/tooltip\";\n\ninterface MenuProps {\n  isOpen: boolean | undefined;\n}\n\nexport function Menu({ isOpen }: MenuProps) {\n  const pathname = usePathname();\n  const menuList = getMenuList(pathname);\n\n  return (\n    <ScrollArea className=\"[&>div>div[style]]:!block\">\n      <nav className=\"mt-8 h-full w-full\">\n        <ul className=\"flex flex-col min-h-[calc(100vh-48px-36px-16px-32px)] lg:min-h-[calc(100vh-32px-40px-32px)] items-start space-y-1 px-2\">\n          {menuList.map(({ groupLabel, menus }, index) => (\n            <li className={cn(\"w-full\", groupLabel ? \"pt-5\" : \"\")} key={index}>\n              {(isOpen && groupLabel) || isOpen === undefined ? (\n                <p className=\"text-sm font-medium text-muted-foreground px-4 pb-2 max-w-[248px] truncate\">\n                  {groupLabel}\n                </p>\n              ) : !isOpen && isOpen !== undefined && groupLabel ? (\n                <TooltipProvider>\n                  <Tooltip delayDuration={100}>\n                    <TooltipTrigger className=\"w-full\">\n                      <div className=\"w-full flex justify-center items-center\">\n                        <Ellipsis className=\"h-5 w-5\" />\n                      </div>\n                    </TooltipTrigger>\n                    <TooltipContent side=\"right\">\n                      <p>{groupLabel}</p>\n                    </TooltipContent>\n                  </Tooltip>\n                </TooltipProvider>\n              ) : (\n                <p className=\"pb-2\"></p>\n              )}\n              {menus.map(\n                ({ href, label, icon: Icon, active, submenus }, index) =>\n                  !submenus || submenus.length === 0 ? (\n                    <div className=\"w-full\" key={index}>\n                      <TooltipProvider disableHoverableContent>\n                        <Tooltip delayDuration={100}>\n                          <TooltipTrigger asChild>\n                            <Button\n                              variant={active ? \"secondary\" : \"ghost\"}\n                              className=\"w-full justify-start h-10 mb-1\"\n                              asChild\n                            >\n                              <Link href={href}>\n                                <span\n                                  className={cn(isOpen === false ? \"\" : \"mr-4\")}\n                                >\n                                  <Icon size={18} />\n                                </span>\n                                <p\n                                  className={cn(\n                                    \"max-w-[200px] truncate\",\n                                    isOpen === false\n                                      ? \"-translate-x-96 opacity-0\"\n                                      : \"translate-x-0 opacity-100\"\n                                  )}\n                                >\n                                  {label}\n                                </p>\n                              </Link>\n                            </Button>\n                          </TooltipTrigger>\n                          {isOpen === false && (\n                            <TooltipContent side=\"right\">\n                              {label}\n                            </TooltipContent>\n                          )}\n                        </Tooltip>\n                      </TooltipProvider>\n                    </div>\n                  ) : (\n                    <div className=\"w-full\" key={index}>\n                      <CollapseMenuButton\n                        icon={Icon}\n                        label={label}\n                        active={active}\n                        submenus={submenus}\n                        isOpen={isOpen}\n                      />\n                    </div>\n                  )\n              )}\n            </li>\n          ))}\n          <li className=\"w-full grow flex items-end\">\n            <TooltipProvider disableHoverableContent>\n              <Tooltip delayDuration={100}>\n                <TooltipTrigger asChild>\n                  <Button\n                    onClick={() => {}}\n                    variant=\"outline\"\n                    className=\"w-full justify-center h-10 mt-5\"\n                  >\n                    <span className={cn(isOpen === false ? \"\" : \"mr-4\")}>\n                      <LogOut size={18} />\n                    </span>\n                    <p\n                      className={cn(\n                        \"whitespace-nowrap\",\n                        isOpen === false ? \"opacity-0 hidden\" : \"opacity-100\"\n                      )}\n                    >\n                      Sign out\n                    </p>\n                  </Button>\n                </TooltipTrigger>\n                {isOpen === false && (\n                  <TooltipContent side=\"right\">Sign out</TooltipContent>\n                )}\n              </Tooltip>\n            </TooltipProvider>\n          </li>\n        </ul>\n      </nav>\n    </ScrollArea>\n  );\n}\n",
+      "path": "components\\admin-panel\\menu.tsx",
+      "target": "components\\admin-panel\\menu.tsx"
+    },
+    {
+      "type": "registry:component",
+      "content": "import { ModeToggle } from \"@/components/mode-toggle\";\nimport { UserNav } from \"@/components/admin-panel/user-nav\";\nimport { SheetMenu } from \"@/components/admin-panel/sheet-menu\";\n\ninterface NavbarProps {\n  title: string;\n}\n\nexport function Navbar({ title }: NavbarProps) {\n  return (\n    <header className=\"sticky top-0 z-10 w-full bg-background/95 shadow backdrop-blur supports-[backdrop-filter]:bg-background/60 dark:shadow-secondary\">\n      <div className=\"mx-4 sm:mx-8 flex h-14 items-center\">\n        <div className=\"flex items-center space-x-4 lg:space-x-0\">\n          <SheetMenu />\n          <h1 className=\"font-bold\">{title}</h1>\n        </div>\n        <div className=\"flex flex-1 items-center justify-end\">\n          <ModeToggle />\n          <UserNav />\n        </div>\n      </div>\n    </header>\n  );\n}\n",
+      "path": "components\\admin-panel\\navbar.tsx",
+      "target": "components\\admin-panel\\navbar.tsx"
+    },
+    {
+      "type": "registry:component",
+      "content": "import Link from \"next/link\";\nimport { MenuIcon, PanelsTopLeft } from \"lucide-react\";\n\nimport { Button } from \"@/components/ui/button\";\nimport { Menu } from \"@/components/admin-panel/menu\";\nimport {\n  Sheet,\n  SheetHeader,\n  SheetContent,\n  SheetTrigger,\n  SheetTitle\n} from \"@/components/ui/sheet\";\n\nexport function SheetMenu() {\n  return (\n    <Sheet>\n      <SheetTrigger className=\"lg:hidden\" asChild>\n        <Button className=\"h-8\" variant=\"outline\" size=\"icon\">\n          <MenuIcon size={20} />\n        </Button>\n      </SheetTrigger>\n      <SheetContent className=\"sm:w-72 px-3 h-full flex flex-col\" side=\"left\">\n        <SheetHeader>\n          <Button\n            className=\"flex justify-center items-center pb-2 pt-1\"\n            variant=\"link\"\n            asChild\n          >\n            <Link href=\"/dashboard\" className=\"flex items-center gap-2\">\n              <PanelsTopLeft className=\"w-6 h-6 mr-1\" />\n              <SheetTitle className=\"font-bold text-lg\">Brand</SheetTitle>\n            </Link>\n          </Button>\n        </SheetHeader>\n        <Menu isOpen />\n      </SheetContent>\n    </Sheet>\n  );\n}\n",
+      "path": "components\\admin-panel\\sheet-menu.tsx",
+      "target": "components\\admin-panel\\sheet-menu.tsx"
+    },
+    {
+      "type": "registry:component",
+      "content": "import { ChevronLeft } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\nimport { Button } from \"@/components/ui/button\";\n\ninterface SidebarToggleProps {\n  isOpen: boolean | undefined;\n  setIsOpen?: () => void;\n}\n\nexport function SidebarToggle({ isOpen, setIsOpen }: SidebarToggleProps) {\n  return (\n    <div className=\"invisible lg:visible absolute top-[12px] -right-[16px] z-20\">\n      <Button\n        onClick={() => setIsOpen?.()}\n        className=\"rounded-md w-8 h-8\"\n        variant=\"outline\"\n        size=\"icon\"\n      >\n        <ChevronLeft\n          className={cn(\n            \"h-4 w-4 transition-transform ease-in-out duration-700\",\n            isOpen === false ? \"rotate-180\" : \"rotate-0\"\n          )}\n        />\n      </Button>\n    </div>\n  );\n}\n",
+      "path": "components\\admin-panel\\sidebar-toggle.tsx",
+      "target": "components\\admin-panel\\sidebar-toggle.tsx"
+    },
+    {
+      "type": "registry:component",
+      "content": "import { PanelsTopLeft } from \"lucide-react\";\nimport Link from \"next/link\";\n\nimport { Menu } from \"@/components/admin-panel/menu\";\nimport { SidebarToggle } from \"@/components/admin-panel/sidebar-toggle\";\nimport { Button } from \"@/components/ui/button\";\nimport { useSidebar } from \"@/hooks/use-sidebar\";\nimport { cn } from \"@/lib/utils\";\nimport { useStore } from \"zustand\";\n\nexport function Sidebar() {\n  const { isOpen, getIsOpenState, setIsHover, toggleOpen } = useStore(\n    useSidebar,\n    (state) => ({\n      isOpen: state.isOpen,\n      setIsHover: state.setIsHover,\n      toggleOpen: state.toggleOpen,\n      getIsOpenState: state.getIsOpenState\n    })\n  )!;\n  if (isOpen === undefined) return null;\n\n  return (\n    <aside\n      className={cn(\n        \"fixed top-0 left-0 z-20 h-screen -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-300\",\n        getIsOpenState() === false ? \"w-[90px]\" : \"w-72\"\n      )}\n    >\n      <SidebarToggle isOpen={isOpen} setIsOpen={toggleOpen} />\n      <div\n        onMouseEnter={() => setIsHover(true)}\n        onMouseLeave={() => setIsHover(false)}\n        className=\"relative h-full flex flex-col px-3 py-4 overflow-y-auto shadow-md dark:shadow-zinc-800\"\n      >\n        <Button\n          className={cn(\n            \"transition-transform ease-in-out duration-300 mb-1\",\n            getIsOpenState() === false ? \"translate-x-1\" : \"translate-x-0\"\n          )}\n          variant=\"link\"\n          asChild\n        >\n          <Link href=\"/dashboard\" className=\"flex items-center gap-2\">\n            <PanelsTopLeft className=\"w-6 h-6 mr-1\" />\n            <h1\n              className={cn(\n                \"font-bold text-lg whitespace-nowrap transition-[transform,opacity,display] ease-in-out duration-300\",\n                getIsOpenState() === false\n                  ? \"-translate-x-96 opacity-0 hidden\"\n                  : \"translate-x-0 opacity-100\"\n              )}\n            >\n              Brand\n            </h1>\n          </Link>\n        </Button>\n        <Menu isOpen={getIsOpenState()} />\n      </div>\n    </aside>\n  );\n}\n",
+      "path": "components\\admin-panel\\sidebar.tsx",
+      "target": "components\\admin-panel\\sidebar.tsx"
+    },
+    {
+      "type": "registry:component",
+      "content": "\"use client\";\n\nimport Link from \"next/link\";\nimport { LayoutGrid, LogOut, User } from \"lucide-react\";\n\nimport { Button } from \"@/components/ui/button\";\nimport { Avatar, AvatarFallback, AvatarImage } from \"@/components/ui/avatar\";\nimport {\n  Tooltip,\n  TooltipContent,\n  TooltipTrigger,\n  TooltipProvider\n} from \"@/components/ui/tooltip\";\nimport {\n  DropdownMenu,\n  DropdownMenuContent,\n  DropdownMenuGroup,\n  DropdownMenuItem,\n  DropdownMenuLabel,\n  DropdownMenuSeparator,\n  DropdownMenuTrigger\n} from \"@/components/ui/dropdown-menu\";\n\nexport function UserNav() {\n  return (\n    <DropdownMenu>\n      <TooltipProvider disableHoverableContent>\n        <Tooltip delayDuration={100}>\n          <TooltipTrigger asChild>\n            <DropdownMenuTrigger asChild>\n              <Button\n                variant=\"outline\"\n                className=\"relative h-8 w-8 rounded-full\"\n              >\n                <Avatar className=\"h-8 w-8\">\n                  <AvatarImage src=\"#\" alt=\"Avatar\" />\n                  <AvatarFallback className=\"bg-transparent\">JD</AvatarFallback>\n                </Avatar>\n              </Button>\n            </DropdownMenuTrigger>\n          </TooltipTrigger>\n          <TooltipContent side=\"bottom\">Profile</TooltipContent>\n        </Tooltip>\n      </TooltipProvider>\n\n      <DropdownMenuContent className=\"w-56\" align=\"end\" forceMount>\n        <DropdownMenuLabel className=\"font-normal\">\n          <div className=\"flex flex-col space-y-1\">\n            <p className=\"text-sm font-medium leading-none\">John Doe</p>\n            <p className=\"text-xs leading-none text-muted-foreground\">\n              johndoe@example.com\n            </p>\n          </div>\n        </DropdownMenuLabel>\n        <DropdownMenuSeparator />\n        <DropdownMenuGroup>\n          <DropdownMenuItem className=\"hover:cursor-pointer\" asChild>\n            <Link href=\"/dashboard\" className=\"flex items-center\">\n              <LayoutGrid className=\"w-4 h-4 mr-3 text-muted-foreground\" />\n              Dashboard\n            </Link>\n          </DropdownMenuItem>\n          <DropdownMenuItem className=\"hover:cursor-pointer\" asChild>\n            <Link href=\"/account\" className=\"flex items-center\">\n              <User className=\"w-4 h-4 mr-3 text-muted-foreground\" />\n              Account\n            </Link>\n          </DropdownMenuItem>\n        </DropdownMenuGroup>\n        <DropdownMenuSeparator />\n        <DropdownMenuItem className=\"hover:cursor-pointer\" onClick={() => {}}>\n          <LogOut className=\"w-4 h-4 mr-3 text-muted-foreground\" />\n          Sign out\n        </DropdownMenuItem>\n      </DropdownMenuContent>\n    </DropdownMenu>\n  );\n}\n",
+      "path": "components\\admin-panel\\user-nav.tsx",
+      "target": "components\\admin-panel\\user-nav.tsx"
+    },
+    {
+      "type": "registry:component",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { useTheme } from \"next-themes\";\nimport { MoonIcon, SunIcon } from \"@radix-ui/react-icons\";\n\nimport { Button } from \"@/components/ui/button\";\nimport {\n  Tooltip,\n  TooltipContent,\n  TooltipTrigger,\n  TooltipProvider\n} from \"@/components/ui/tooltip\";\n\nexport function ModeToggle() {\n  const { setTheme, theme } = useTheme();\n\n  return (\n    <TooltipProvider disableHoverableContent>\n      <Tooltip delayDuration={100}>\n        <TooltipTrigger asChild>\n          <Button\n            className=\"rounded-full w-8 h-8 bg-background mr-2\"\n            variant=\"outline\"\n            size=\"icon\"\n            onClick={() => setTheme(theme === \"dark\" ? \"light\" : \"dark\")}\n          >\n            <SunIcon className=\"w-[1.2rem] h-[1.2rem] rotate-90 scale-0 transition-transform ease-in-out duration-500 dark:rotate-0 dark:scale-100\" />\n            <MoonIcon className=\"absolute w-[1.2rem] h-[1.2rem] rotate-0 scale-1000 transition-transform ease-in-out duration-500 dark:-rotate-90 dark:scale-0\" />\n            <span className=\"sr-only\">Switch Theme</span>\n          </Button>\n        </TooltipTrigger>\n        <TooltipContent side=\"bottom\">Switch Theme</TooltipContent>\n      </Tooltip>\n    </TooltipProvider>\n  );\n}\n",
+      "path": "components\\mode-toggle.tsx",
+      "target": "components\\mode-toggle.tsx"
+    },
+    {
+      "type": "registry:component",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { ThemeProvider as NextThemesProvider } from \"next-themes\";\nimport { type ThemeProviderProps } from \"next-themes/dist/types\";\n\nexport function ThemeProvider({ children, ...props }: ThemeProviderProps) {\n  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;\n}\n",
+      "path": "components\\providers\\theme-provider.tsx",
+      "target": "components\\providers\\theme-provider.tsx"
+    },
+    {
+      "type": "registry:lib",
+      "content": "import {\n  Tag,\n  Users,\n  Settings,\n  Bookmark,\n  SquarePen,\n  LayoutGrid,\n  LucideIcon\n} from \"lucide-react\";\n\ntype Submenu = {\n  href: string;\n  label: string;\n  active?: boolean;\n};\n\ntype Menu = {\n  href: string;\n  label: string;\n  active: boolean;\n  icon: LucideIcon;\n  submenus?: Submenu[];\n};\n\ntype Group = {\n  groupLabel: string;\n  menus: Menu[];\n};\n\nexport function getMenuList(pathname: string): Group[] {\n  return [\n    {\n      groupLabel: \"\",\n      menus: [\n        {\n          href: \"/dashboard\",\n          label: \"Dashboard\",\n          active: pathname.includes(\"/dashboard\"),\n          icon: LayoutGrid,\n          submenus: []\n        }\n      ]\n    },\n    {\n      groupLabel: \"Contents\",\n      menus: [\n        {\n          href: \"\",\n          label: \"Posts\",\n          active: pathname.includes(\"/posts\"),\n          icon: SquarePen,\n          submenus: [\n            {\n              href: \"/posts\",\n              label: \"All Posts\"\n            },\n            {\n              href: \"/posts/new\",\n              label: \"New Post\"\n            }\n          ]\n        },\n        {\n          href: \"/categories\",\n          label: \"Categories\",\n          active: pathname.includes(\"/categories\"),\n          icon: Bookmark\n        },\n        {\n          href: \"/tags\",\n          label: \"Tags\",\n          active: pathname.includes(\"/tags\"),\n          icon: Tag\n        }\n      ]\n    },\n    {\n      groupLabel: \"Settings\",\n      menus: [\n        {\n          href: \"/users\",\n          label: \"Users\",\n          active: pathname.includes(\"/users\"),\n          icon: Users\n        },\n        {\n          href: \"/account\",\n          label: \"Account\",\n          active: pathname.includes(\"/account\"),\n          icon: Settings\n        }\n      ]\n    }\n  ];\n}\n",
+      "path": "lib\\menu-list.ts",
+      "target": "lib\\menu-list.ts"
+    }
+  ]
+}
