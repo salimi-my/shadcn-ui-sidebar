@@ -8,8 +8,7 @@ import { useSidebar } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
 import { useStore } from "zustand";
 
-type SidebarOptions = {};
-export function Sidebar({}: SidebarOptions) {
+export function Sidebar() {
   const { isOpen, getIsOpenState, setIsHover, toggleOpen } = useStore(
     useSidebar,
     (state) => ({
