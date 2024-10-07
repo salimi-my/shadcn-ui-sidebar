@@ -19,6 +19,22 @@ A stunning and functional retractable sidebar for Next.js built on top of [shadc
 - TypeScript
 - Zustand
 
+## Installation
+
+### Custom registry
+
+If you are using @shadcn/ui 2.0.0 or later, you can install the component directly from the registry.
+
+```bash
+npx shadcn@latest add https://raw.githubusercontent.com/salimi-my/shadcn-ui-sidebar/refs/heads/master/public/registry/shadcn-sidebar.json
+
+or
+
+npx shadcn@latest add https://shadcn-ui-sidebar.salimi.my/registry/shadcn-sidebar.json
+```
+
+
+
 ## Starting the project locally
 
 1. Clone the repository
