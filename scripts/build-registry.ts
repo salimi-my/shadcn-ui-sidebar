@@ -38,7 +38,7 @@ const getComponentFiles = async (files: File[]) => {
     if (typeof file === "string") {
       const filePath = `${REGISTRY_BASE_PATH}\\${file}`;
       const fileContent = await fs.readFile(filePath, "utf-8");
-      console.log("🚀 ~ filesArrayPromises ~ file:", file);
+      console.log("Build Registry:", file);
       return {
         type: FolderToComponentTypeMap[
           file.split("\\")[0] as keyof typeof FolderToComponentTypeMap
