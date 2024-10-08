@@ -3,7 +3,7 @@ import { GeistSans } from "geist/font/sans";
 
 import "./globals.css";
 
-import { ThemeProvider } from "@/providers/theme-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
