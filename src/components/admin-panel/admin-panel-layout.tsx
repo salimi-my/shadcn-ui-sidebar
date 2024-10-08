@@ -12,7 +12,6 @@ export default function AdminPanelLayout({
   children: React.ReactNode;
 }) {
   const isSidebarOpen = useStore(useSidebar, (state) => state.getIsOpenState());
-  if (isSidebarOpen === undefined) return null;
 
   return (
     <>
