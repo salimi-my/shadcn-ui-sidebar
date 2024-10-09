@@ -6,7 +6,7 @@ function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
   const files = fs.readdirSync(dirPath);
 
   files.forEach((file) => {
-    const filePath = path.join(dirPath, file);
+    const filePath = path.join(dirPath, file).replaceAll("\\", "/");
     if (fs.statSync(filePath).isDirectory()) {
       arrayOfFiles = getAllFiles(filePath, arrayOfFiles);
     } else {
@@ -17,15 +17,15 @@ function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
   return arrayOfFiles;
 }
 
-const ignoreFolders = ["src\\components\\ui", "src\\components\\demo"];
+const ignoreFolders = ["src/components/ui", "src/components/demo"];
 
-const hooks = getAllFiles(".\\src\\hooks").map((x) => {
-  return x.split("src\\")[1];
+const hooks = getAllFiles("./src/hooks").map((x) => {
+  return x.split("src/")[1];
 });
 
-const components = getAllFiles(".\\src\\components")
+const components = getAllFiles("./src/components")
   .filter((x) => !ignoreFolders.some((igf) => x.startsWith(igf)))
-  .map((x) => x.split("src\\")[1]);
+  .map((x) => x.split("src/")[1]);
 
 export const ui: Registry = [
   {
@@ -74,6 +74,6 @@ export const ui: Registry = [
         }
       }
     },
-    files: [...hooks, ...components, "lib\\menu-list.ts"]
+    files: [...hooks, ...components, "lib/menu-list.ts"]
   }
 ];
