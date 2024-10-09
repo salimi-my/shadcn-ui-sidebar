@@ -18,9 +18,12 @@ import {
   TooltipTrigger
 } from "@/components/ui/tooltip";
 import { useSidebar } from "@/hooks/use-sidebar";
+import { useStore } from "@/hooks/use-store";
 
 export default function DashboardPage() {
-  const { settings, setSettings } = useSidebar();
+  const sidebar = useStore(useSidebar, (x) => x);
+  if (!sidebar) return null;
+  const { settings, setSettings } = sidebar;
   return (
     <ContentLayout title="Dashboard">
       <Breadcrumb>
