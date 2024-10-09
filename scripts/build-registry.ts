@@ -36,12 +36,12 @@ async function writeFileRecursive(filePath: string, data: string) {
 const getComponentFiles = async (files: File[]) => {
   const filesArrayPromises = (files ?? []).map(async (file) => {
     if (typeof file === "string") {
-      const filePath = `${REGISTRY_BASE_PATH}\\${file}`;
+      const filePath = `${REGISTRY_BASE_PATH}/${file}`;
       const fileContent = await fs.readFile(filePath, "utf-8");
       console.log("Build Registry:", file);
       return {
         type: FolderToComponentTypeMap[
-          file.split("\\")[0] as keyof typeof FolderToComponentTypeMap
+          file.split("/")[0] as keyof typeof FolderToComponentTypeMap
         ],
         content: fileContent,
         path: file,
