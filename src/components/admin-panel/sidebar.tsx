@@ -1,23 +1,20 @@
-import { PanelsTopLeft } from "lucide-react";
-import Link from "next/link";
-
 import { Menu } from "@/components/admin-panel/menu";
 import { SidebarToggle } from "@/components/admin-panel/sidebar-toggle";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/hooks/use-sidebar";
 import { cn } from "@/lib/utils";
-import { useStore } from "zustand";
+import { PanelsTopLeft } from "lucide-react";
+import Link from "next/link";
 
 export function Sidebar() {
-  const { isOpen, getIsOpenState, setIsHover, toggleOpen } = useStore(
-    useSidebar,
-    (state) => ({
-      isOpen: state.isOpen,
-      setIsHover: state.setIsHover,
-      toggleOpen: state.toggleOpen,
-      getIsOpenState: state.getIsOpenState
+  const { isOpen, toggleOpen, getIsOpenState, setIsHover } = useSidebar(
+    ({ isOpen, toggleOpen, getIsOpenState, setIsHover }) => ({
+      isOpen,
+      toggleOpen,
+      getIsOpenState,
+      setIsHover
     })
-  )!;
+  );
   if (isOpen === undefined) return null;
 
   return (
