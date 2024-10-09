@@ -20,10 +20,7 @@ import {
 import { useSidebar } from "@/hooks/use-sidebar";
 
 export default function DashboardPage() {
-  const { settings, setSettings } = useSidebar(({ settings, setSettings }) => ({
-    settings,
-    setSettings
-  }));
+  const { settings, setSettings } = useSidebar();
   return (
     <ContentLayout title="Dashboard">
       <Breadcrumb>
@@ -54,6 +51,21 @@ export default function DashboardPage() {
             </TooltipTrigger>
             <TooltipContent>
               <p>When hovering on the sidebar in mini state, it will open</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="is-hover-open"
+                  onCheckedChange={(x) => setSettings({ disabled: x })}
+                  checked={settings.disabled}
+                />
+                <Label htmlFor="is-hover-open">Disable Sidebar</Label>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Hide sidebar</p>
             </TooltipContent>
           </Tooltip>
         </div>

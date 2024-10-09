@@ -2,15 +2,15 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { produce } from "immer";
 
-type SidebarSettings = { isHoverOpen: boolean };
+type SidebarSettings = { disabled: boolean; isHoverOpen: boolean };
 type SidebarStore = {
   isOpen: boolean;
   isHover: boolean;
   settings: SidebarSettings;
   toggleOpen: () => void;
-  setIsHover: (isHover: boolean) => void;
   setIsOpen: (isOpen: boolean) => void;
-  getIsOpenState: () => boolean;
+  setIsHover: (isHover: boolean) => void;
+  getOpenState: () => boolean;
   setSettings: (settings: Partial<SidebarSettings>) => void;
 };
 
@@ -19,7 +19,7 @@ export const useSidebar = create(
     (set, get) => ({
       isOpen: true,
       isHover: false,
-      settings: { isHoverOpen: false },
+      settings: { disabled: false, isHoverOpen: false },
       toggleOpen: () => {
         set({ isOpen: !get().isOpen });
       },
@@ -29,7 +29,7 @@ export const useSidebar = create(
       setIsHover: (isHover: boolean) => {
         set({ isHover });
       },
-      getIsOpenState: () => {
+      getOpenState: () => {
         const state = get();
         return state.isOpen || (state.settings.isHoverOpen && state.isHover);
       },
