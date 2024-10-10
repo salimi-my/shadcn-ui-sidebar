@@ -17,7 +17,7 @@ type Submenu = {
 type Menu = {
   href: string;
   label: string;
-  active: boolean;
+  active?: boolean;
   icon: LucideIcon;
   submenus?: Submenu[];
 };
@@ -35,7 +35,6 @@ export function getMenuList(pathname: string): Group[] {
         {
           href: "/dashboard",
           label: "Dashboard",
-          active: pathname.includes("/dashboard"),
           icon: LayoutGrid,
           submenus: []
         }
@@ -47,7 +46,6 @@ export function getMenuList(pathname: string): Group[] {
         {
           href: "",
           label: "Posts",
-          active: pathname.includes("/posts"),
           icon: SquarePen,
           submenus: [
             {
@@ -63,13 +61,11 @@ export function getMenuList(pathname: string): Group[] {
         {
           href: "/categories",
           label: "Categories",
-          active: pathname.includes("/categories"),
           icon: Bookmark
         },
         {
           href: "/tags",
           label: "Tags",
-          active: pathname.includes("/tags"),
           icon: Tag
         }
       ]
@@ -80,13 +76,11 @@ export function getMenuList(pathname: string): Group[] {
         {
           href: "/users",
           label: "Users",
-          active: pathname.includes("/users"),
           icon: Users
         },
         {
           href: "/account",
           label: "Account",
-          active: pathname.includes("/account"),
           icon: Settings
         }
       ]

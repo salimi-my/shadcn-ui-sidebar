@@ -58,7 +58,13 @@ export function Menu({ isOpen }: MenuProps) {
                         <Tooltip delayDuration={100}>
                           <TooltipTrigger asChild>
                             <Button
-                              variant={active ? "secondary" : "ghost"}
+                              variant={
+                                (active === undefined &&
+                                  pathname.startsWith(href)) ||
+                                active
+                                  ? "secondary"
+                                  : "ghost"
+                              }
                               className="w-full justify-start h-10 mb-1"
                               asChild
                             >
@@ -94,7 +100,11 @@ export function Menu({ isOpen }: MenuProps) {
                       <CollapseMenuButton
                         icon={Icon}
                         label={label}
-                        active={active}
+                        active={
+                          active === undefined
+                            ? pathname.startsWith(href)
+                            : active
+                        }
                         submenus={submenus}
                         isOpen={isOpen}
                       />
