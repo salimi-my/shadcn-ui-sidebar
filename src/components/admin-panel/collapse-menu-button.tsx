@@ -139,7 +139,7 @@ export function CollapseMenuButton({
           <TooltipTrigger asChild>
             <DropdownMenuTrigger asChild>
               <Button
-                variant={active ? "secondary" : "ghost"}
+                variant={isSubmenuActive ? "secondary" : "ghost"}
                 className="w-full justify-start h-10 mb-1"
               >
                 <div className="w-full items-center flex justify-between">
