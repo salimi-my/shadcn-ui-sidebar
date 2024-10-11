@@ -60,11 +60,11 @@ export default function DashboardPage() {
             <TooltipTrigger asChild>
               <div className="flex items-center space-x-2">
                 <Switch
-                  id="is-hover-open"
+                  id="disable-sidebar"
                   onCheckedChange={(x) => setSettings({ disabled: x })}
                   checked={settings.disabled}
                 />
-                <Label htmlFor="is-hover-open">Disable Sidebar</Label>
+                <Label htmlFor="disable-sidebar">Disable Sidebar</Label>
               </div>
             </TooltipTrigger>
             <TooltipContent>
