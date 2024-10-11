@@ -33,7 +33,30 @@ or
 npx shadcn@latest add https://shadcn-ui-sidebar.salimi.my/registry/shadcn-sidebar.json
 ```
 
+### Usage example for Nextjs
+```tsx
+//layout.tsx
+import AdminPanelLayout from "@/components/admin-panel/admin-panel-layout";
 
+export default async function Layout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return <AdminPanelLayout>{children}</AdminPanelLayout>;
+}
+
+//page.tsx
+import { ContentLayout } from "@/components/admin-panel/content-layout";
+
+export default function Page() {
+  return (
+    <ContentLayout title="Test">
+      <div>Test</div>
+    </ContentLayout>
+  );
+}
+```
 
 ## Starting the project locally
 
