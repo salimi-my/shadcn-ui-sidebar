@@ -51,7 +51,7 @@ export function CollapseMenuButton({
 }: CollapseMenuButtonProps) {
   const pathname = usePathname();
   const isSubmenuActive = submenus.some((submenu) =>
-    submenu.active == undefined ? submenu.href === pathname : submenu.active
+    submenu.active === undefined ? submenu.href === pathname : submenu.active
   );
   const [isCollapsed, setIsCollapsed] = useState<boolean>(isSubmenuActive);
 
@@ -66,7 +66,7 @@ export function CollapseMenuButton({
         asChild
       >
         <Button
-          variant={active ? "secondary" : "ghost"}
+          variant={isSubmenuActive ? "secondary" : "ghost"}
           className="w-full justify-start h-10"
         >
           <div className="w-full items-center flex justify-between">
