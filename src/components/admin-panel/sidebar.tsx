@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/hooks/use-sidebar";
 import { useStore } from "@/hooks/use-store";
 import { cn } from "@/lib/utils";
-import { PanelsTopLeft } from "lucide-react";
+import { Home, RefreshCw, Sparkles } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export function Sidebar() {
@@ -15,39 +16,84 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        "fixed top-0 left-0 z-20 h-screen -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-300",
+        "fixed top-0 left-0 z-20 h-screen -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-300 bg-white",
         !getOpenState() ? "w-[90px]" : "w-72",
-        settings.disabled && "hidden"
+        settings.disabled && "hidden",
       )}
     >
       <SidebarToggle isOpen={isOpen} setIsOpen={toggleOpen} />
       <div
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
-        className="relative h-full flex flex-col px-3 py-4 overflow-y-auto shadow-md dark:shadow-zinc-800"
+        className="relative h-full flex flex-col px-3 py-4 overflow-y-auto shadow-md border-r border-gray-200"
       >
-        <Button
-          className={cn(
-            "transition-transform ease-in-out duration-300 mb-1",
-            !getOpenState() ? "translate-x-1" : "translate-x-0"
-          )}
-          variant="link"
-          asChild
-        >
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <PanelsTopLeft className="w-6 h-6 mr-1" />
-            <h1
+        <div className="flex items-center justify-center mb-6 h-10">
+          <img
+            src="https://scventures.io/fintechbridge/logo-full.svg"
+            alt="SC Ventures by Standard Chartered"
+            className="h-full object-contain"
+          />
+        </div>
+
+        <div className="space-y-1">
+          <Button
+            variant="ghost"
+            className={cn(
+              "w-full justify-start",
+              !getOpenState() ? "px-3" : "px-4",
+            )}
+            asChild
+          >
+            <Link href="/dashboard" className="flex items-center">
+              <Home className="h-5 w-5 mr-3 text-gray-500" />
+              <span
+                className={cn(
+                  "transition-opacity ease-in-out duration-300",
+                  !getOpenState() ? "opacity-0" : "opacity-100",
+                )}
+              >
+                Bridge
+              </span>
+            </Link>
+          </Button>
+
+          <Button
+            variant="ghost"
+            className={cn(
+              "w-full justify-start",
+              !getOpenState() ? "px-3" : "px-4",
+            )}
+          >
+            <RefreshCw className="h-5 w-5 mr-3 text-gray-500" />
+            <span
               className={cn(
-                "font-bold text-lg whitespace-nowrap transition-[transform,opacity,display] ease-in-out duration-300",
-                !getOpenState()
-                  ? "-translate-x-96 opacity-0 hidden"
-                  : "translate-x-0 opacity-100"
+                "transition-opacity ease-in-out duration-300",
+                !getOpenState() ? "opacity-0" : "opacity-100",
               )}
             >
-              Brand
-            </h1>
-          </Link>
-        </Button>
+              SCWIN
+            </span>
+          </Button>
+
+          <Button
+            variant="ghost"
+            className={cn(
+              "w-full justify-start",
+              !getOpenState() ? "px-3" : "px-4",
+            )}
+          >
+            <Sparkles className="h-5 w-5 mr-3 text-gray-500" />
+            <span
+              className={cn(
+                "transition-opacity ease-in-out duration-300",
+                !getOpenState() ? "opacity-0" : "opacity-100",
+              )}
+            >
+              Spark Innovation
+            </span>
+          </Button>
+        </div>
+
         <Menu isOpen={getOpenState()} />
       </div>
     </aside>
